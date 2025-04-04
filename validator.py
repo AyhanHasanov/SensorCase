@@ -14,7 +14,7 @@ os.makedirs(upload_dir, exist_ok=True)
 
 def validate() :
     while True :
-        time.sleep(20)
+        time.sleep(60)
         stable_data = []
         error_data = []
         timestamp = datetime.now()

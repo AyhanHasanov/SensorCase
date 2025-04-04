@@ -11,25 +11,31 @@ stable_dir = "data/stable"
 error_dir = "data/error"
 os.makedirs(stable_dir, exist_ok=True)
 os.makedirs(error_dir, exist_ok=True)
-generate_every = 5
+generate_every = 2
+
 
 def generate_sensor_data():
+    counter = 0
     while True:
         error_data = []
         stable_data = []
         timestamp = datetime.now()
         file_name = f"Sensor{timestamp.strftime("%Y%m%d-%H%M%S")}.json"
-
+        counter += 1
         for sensor in sensors :
             temperature = random.uniform(10.0, 15.0) if random.random() > 0.04 else -100
-            frequency = random.uniform(15, 150) if random.random() > 0.04 else -100
-            status = "Error" if temperature == -100 or frequency == -100 else "Stable"
+            frequency = random.uniform(15, 150) if random.random() > 0.02 else -100
+            energy_output = random.uniform(1500, 15000) if random.random() > 0.01 else -1
+            energy_conversion_efficiency = random.uniform(0.0, 0.99) if random.random() > 0.04 else -1
+            status = "Error" if temperature == -100 or frequency == -100 or energy_conversion_efficiency == -1 or energy_output == -1 else "Stable"
 
             to_append = {
                 "sensor_id" : sensor,
                 "timestamp" : timestamp.isoformat(),
                 "temperature" : round(temperature, 2),
                 "frequency" : round(frequency, 2),
+                "energy_output" : round(energy_output, 2),
+                "energy_conversion_efficiency" : round(energy_conversion_efficiency, 2),
                 "status" : status
                 }
 
@@ -50,4 +56,5 @@ def generate_sensor_data():
                 json.dump(error_data, f)
 
         print(f"\x1b[92mGenerated sensor data: {file_name}\x1b[0m")
+        print(f"\x1b[92mTotal generated data: {counter}\x1b[0m")
         time.sleep(generate_every)
